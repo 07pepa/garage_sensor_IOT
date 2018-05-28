@@ -1,0 +1,289 @@
+<html>
+	<head>
+		<title>AVTK PROJEKT</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+		<link rel="manifest" href="images/favicon/site.webmanifest">
+		<link rel="mask-icon" href="images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="theme-color" content="#ffffff">
+		<style>
+		.LED{display:block;
+			cursor: unset;
+			line-height: 2.8vw ;
+			font-size: 2.12vw ;
+			position: relative;
+			width: 9vw ;
+			height: 9vw ;
+			border-radius:100%;
+			color:white ;
+			 text-align: center;
+			}
+		.Porucha{
+			background-color:orange;
+		}
+		.Obsazeno{
+			background-color:red;
+		}
+		.Volná{
+			background-color:green;
+		}
+		
+		@-webkit-keyframes blikani {
+    0%   {border-color: red;}
+    25%  {border-color: yellow;}
+    50%  {border-color: orange;}
+    100% {border-color: red;}
+}
+
+@keyframes blikani {
+    0%   {border-color: red;}
+    25%  {border-color: yellow;}
+    50%  {border-color: orange;}
+    100% {border-color: red;}
+}
+
+#problem {
+    position: fixed;
+	z-index: 1;
+    top: 5vw;
+    right: 1.3vw;
+    width: 28.2vw;
+    height:5vw;
+	background-color: coral;
+	font-size: 3vw;
+    border: 0.3vw  solid;
+    -webkit-animation: blikani 5s infinite; /* Safari 4.0 - 8.0 */
+    animation: blikani 5s infinite;
+}
+#problemtext{
+   position: absolute;
+   top: 0.3vw;
+   
+}
+		</style>
+	</head>
+	
+	<body class="no-sidebar elem">
+		<div id="page-wrapper">
+		<div id="problem"><span id="problemtext">Nepřipojeno k serveru!</span></div>
+			<!-- Header -->
+				<div id="header">
+
+					<!-- Inner -->
+						<div class="inner">
+							<header>
+								<h1><a id="logo">Garáže</a></h1>
+							</header>
+						</div>
+
+					<!-- Nav -->
+						<nav id="nav">
+							<ul>
+								<li><a href="index.html">Domů</a></li>
+								<li><a href="garaze.html">Garáže</a></li>
+							</ul>
+						</nav>
+
+				</div>
+
+			<!-- Main -->
+				<div class="wrapper style1">
+
+					<div class="container">
+						<article id="main" class="special">
+							<header>
+								<h2>Komplexní přehled o garážích</h2>
+							</header>
+							<section>
+							<header>
+							<h3>Počítadlo volných garáží</h3>
+							<canvas id="pocitadlo" width="240" height="120">
+								Your browser is unfortunately not supported.
+							</canvas>
+							</header>
+							</section>
+							<section>
+							<header>
+							<h3>Stav jednotlivých garáží</h3>
+							
+							<div class="row">
+							<article class="4u 12u(mobile) special">
+							<h4>Garáž 1</h4>
+								<div class="icon LED Porucha" id="g1"><br>Porucha</div>
+							</article>
+							<article class="4u 12u(mobile) special">
+							<h4>Garáž 2</h4>
+								<div class="icon LED Porucha"id="g2"><br>Porucha</div>
+							</article>
+							</div>
+							</header>
+							</section>
+							<section>
+							<header>
+								<h3>Stav připojení Rasberry Pi</h3>
+								<p>Naposledy připojeno k serveru: <span id="kdy">?</span></p>
+							</header>
+							</section>
+							<section>
+							<header>
+							<h3>Aktuální čas</h3>
+							</header>
+							<canvas id="hodiny" width="260" height="140">
+								Your browser is unfortunately not supported.
+							</canvas>
+							</section>
+							<br><br><br><br>
+						</article>
+
+								<!-- Copyright -->
+									<div class="copyright">
+										<ul class="menu">
+											<li>&copy; Tomáš J. a Pepa H. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+										</ul>
+									</div>
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+		</div>
+		<!-- Scripts -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.dropotron.min.js"></script>
+		<script src="assets/js/jquery.scrolly.min.js"></script>
+		<script src="assets/js/jquery.onvisible.min.js"></script>
+		<script src="assets/js/skel.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+		<script src="assets/js/main.js"></script>
+		<!--[if lt IE 9]><script type="text/javascript" src="assets/js/excanvas.js"></script><![endif]-->
+		<script type="text/javascript" src="assets/js/segment-display.js"></script>
+		<script type="text/javascript">
+		var url="https://akela.mendelu.cz/~xhavran5/avtkProjekt/public/frontend/getAll?idRpi=1";
+		var hodiny;
+		var pocitadlo;
+		var volne=0;
+		var cas;
+		var stavy=[1,1];
+		var pripojeno=false;
+		var stavySTR=["Porucha","Obsazeno","Volná"];
+		var garaze=[document.getElementById("g1"),document.getElementById("g2")];
+		var problemlabel=document.getElementById("problem").style;
+		var kdy=document.getElementById("kdy");
+		window.addEventListener('load', bootUP());
+		
+		
+		function downloader(){
+			function load(){
+				var myArr;
+				try {
+					var myArr=JSON.parse(this.responseText);
+					var time=new Date(myArr["rpi_last_seen"]);
+					kdy.innerHTML=time.getDate()+"."+(time.getMonth()+1)+"."+time.getFullYear()+"  "+dateToStr(time);
+					var aktgaraze=myArr["garaze"];
+					var toto;
+					for (i = 0; i < aktgaraze.length; i++)
+					{
+						toto=aktgaraze[i];
+						UpdateGaraz(toto["id"],toto["id_stav"]);
+					}
+					if(!pripojeno){
+						reconencted();
+					}
+				} catch(e) {
+					
+					console.log(this.responseText);
+				}
+			}
+			
+			
+			
+		var xhr= new XMLHttpRequest();
+		xhr.open("GET", url, true);
+		xhr.timeout=900;
+		xhr.onerror=disconected;
+		xhr.onload=load;
+		xhr.ontimeout=disconected;
+		xhr.send();
+		}
+		
+		function bootUP(){
+			hodiny=new SegmentDisplay("hodiny");
+			pocitadlo=new SegmentDisplay("pocitadlo");
+			sethodiny(hodiny,"##:##:##",7);
+			sethodiny(pocitadlo,"#####",14);
+			pocitadlo.setValue("Error");
+			window.setInterval("keeptime()", 100);
+			window.setInterval("downloader()", 1000);
+		}
+
+		function UpdateGaraz(idGaraz,newstav){
+			idGaraz--;
+			if(stavy[idGaraz]==newstav) 
+				return;
+			if(newstav==3){
+				volne++;
+			}else if(volne>0&&stavy[idGaraz]==3){
+				volne--;
+			}
+			pocitadlo.setValue(volne.toString().padStart(5," "));
+			var tahlegaraz=garaze[idGaraz];
+			tahlegaraz.classList.remove(stavySTR[stavy[idGaraz]-1]);
+			stavy[idGaraz]=newstav;
+			var strstav=stavySTR[newstav-1];
+			tahlegaraz.classList.add(strstav);
+			tahlegaraz.innerHTML="<br>"+strstav;
+		}
+
+		function disconected(){
+			problemlabel.display= "block";
+			pripojeno=false;
+			for(i=1;i<garaze.length+1;i++){
+				UpdateGaraz(i,1);
+			}
+			pocitadlo.setValue("Error");
+		}
+
+		function reconencted(){
+			pripojeno=true;
+			problemlabel.display="none";
+		}
+
+		function keeptime() {
+			cas= new Date();
+			hodiny.setValue(dateToStr(cas));
+		}
+
+		function dateToStr(time){
+			var hours   = time.getHours();
+			var minutes = time.getMinutes();
+			var seconds = time.getSeconds();
+			var value   =((hours<10)?' ':'')+hours+ ':'+((minutes < 10)?'0':'') + minutes+':'+ ((seconds < 10) ? '0' : '') + seconds;
+			return value
+		}
+
+		function sethodiny(display,pattern,segmenty){
+			display.pattern         = pattern;
+			display.displayAngle    = 0.5;
+			display.digitHeight     = 24.5;
+			display.digitWidth      = 18;
+			display.digitDistance   = 1.7;
+			display.segmentWidth    = 2.8;
+			display.segmentDistance = 0.6;
+			display.segmentCount    = segmenty;
+			display.cornerType      = 3;
+			display.colorOn         = "#e90000";
+			display.colorOff        = "#ffe9e7";
+			display.draw();
+		}
+		</script>
+	</body>
+</html>
